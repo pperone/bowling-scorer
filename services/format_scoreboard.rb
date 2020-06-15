@@ -12,13 +12,15 @@ class FormatScoreboard
 
   def call
     result = []
+    result << header
 
     game.scoreboards.each do |score|
-      result << header
       result << player(score.player)
       result << pinfalls(score.pinfalls)
       result << score(score.score)
     end
+
+    result
   end
 
   private
@@ -26,7 +28,7 @@ class FormatScoreboard
   attr_reader :game
 
   def header
-    'Frame    1   2   3   4   5   6   7   8   9   10\n'
+    'Frame    1   2   3   4   5   6   7   8   9   10'
   end
 
   def player(name)
@@ -39,8 +41,6 @@ class FormatScoreboard
     pinfalls.each do |p|
       line += "#{p} "
     end
-    
-    line += '\n'
   end
 
   def score(scores)
@@ -49,7 +49,5 @@ class FormatScoreboard
     scores.each do |s|
       line += "#{s}   "
     end
-    
-    line += '\n'
   end
 end

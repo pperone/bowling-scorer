@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
+# Models
+require './models/scoreboard.rb'
+
 class Game
-  def initialize(player_1, player_2)
-    @player_1 = player_1
-    @player_2 = player_2
+  def initialize
+    @scoreboards = []
   end
 
-  attr_reader :player_1, :player_2
+  attr_accessor :scoreboards
 end

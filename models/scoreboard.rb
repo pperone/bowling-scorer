@@ -1,23 +1,27 @@
 # frozen_string_literal: true
 
+# Models
+require './models/player.rb'
+require './models/frame.rb'
+
 class Scoreboard
   def initialize(player, scores)
     @player = player.name
     @scores = scores
-    @frames = []
+    @frames = make_frames
   end
 
   def pinfalls
     pinfalls = []
 
-    scores.each do |s|
-      if s == 'F'
-        pinfalls << s
-      elsif s.to_i == 10
-        pinfalls << ' '
-        pinfalls << 'X'
+    frames.each do |f|
+      if f.final_frame?
+        pinfalls << f.box_1
+        pinfalls << f.box_2
+        pinfalls << f.box_3
       else
-        pinfalls << s  
+        pinfalls << f.box_1
+        pinfalls << f.box_2
       end
     end
 
@@ -25,37 +29,91 @@ class Scoreboard
   end
 
   def score
-    ints   = []
-    totals = []
-
-    scores.each { |s| ints << s.to_i }
-
-    ints.each_with_index do |int, index|
-      if int == 10
-        totals << int + ints[index + 1] + ints[index + 2]
-
-    end
-
-    totals
+    frames.map(&:total)
   end
 
   def make_frames
-    
-  end
+    no_blanks = fill_blanks
+    frames    = []
+    index     = 0
 
-  def only_numbers
-    only_numbers = []
+    while index < no_blanks.length
+      if index < 18
+        if no_blanks[index] == 'F' && no_blanks[index + 1] == 10
+          frames << Frame.new('F', '/')
+        elsif no_blanks[index] == 'F'
+          frames << Frame.new('F', no_blanks[index + 1])
+        elsif no_blanks[index + 1] == 'F'
+          frames << Frame.new(no_blanks[index], 'F')
+        elsif no_blanks[index + 1] == 'X'
+          frames << Frame.new(' ', 'X')
+        elsif no_blanks[index] + no_blanks[index + 1] == 10
+          frames << Frame.new(no_blanks[index], '/')
+        else
+          frames << Frame.new(no_blanks[index], no_blanks[index + 1])
+        end
 
-    scores.each do |s|
-      if s.to_i == 10
-        only_numbers << 0
-        only_numbers << 10
+        index += 2
       else
-        only_numbers << s.to_i
+        if no_blanks[index + 2] == 0
+          frames << Frame.new(no_blanks[index], no_blanks[index +1], ' ')
+        else
+          frames << Frame.new(no_blanks[index], no_blanks[index +1], no_blanks[index + 2])
+        end
+
+        index += 3
       end
     end
 
-    only_numbers
+    calculate_totals(frames)
+  end
+
+  def fill_blanks
+    no_blanks = []
+
+    scores.each do |s|
+      if s == 'F'
+        no_blanks << s
+      elsif s.to_i == 10
+        no_blanks << 0
+        no_blanks << 'X'
+      else
+        no_blanks << s.to_i
+      end
+    end
+
+    if no_blanks.length < 21
+      no_blanks << 0
+    end
+
+    no_blanks
+  end
+
+  def calculate_totals(frames)
+    total = frames[0].inner_total
+    index = 0
+
+    while index < frames.length
+      if frames[index].strike?
+        if frames[index + 1].strike?
+          total += 20 + frames[index + 2].first_throw
+          frames[index].total = total
+        else
+          total += 10 + frames[index + 1].inner_total
+          frames[index].total = total
+        end
+      elsif frames[index].spare?
+        total += 10 + frames[index + 1].first_throw
+        frames[index].total = total
+      else
+        total += frames[index].inner_total
+        frames[index].total = total
+      end
+
+      index += 1
+    end
+
+    frames
   end
 
   attr_reader :player, :scores
