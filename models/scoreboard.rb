@@ -22,7 +22,7 @@ class Scoreboard
       else
         pinfalls << f.box_1
         pinfalls << f.box_2
-        pinfalls << '   '
+        pinfalls << "\t"
       end
     end
 
@@ -99,9 +99,15 @@ class Scoreboard
     index = 0
 
     while index < frames.length
-      if frames[index].strike?
+      if frames[index].final_frame?
+        total += frames[index].inner_total
+        frames[index].total = total
+      elsif frames[index].strike?
         if frames[index + 1].strike?
           total += 20 + frames[index + 2].first_throw
+          frames[index].total = total
+        elsif frames[index + 1].final_frame?
+          total += 10 + frames[index + 1].first_throw + frames[index + 1].second_throw
           frames[index].total = total
         else
           total += 10 + frames[index + 1].inner_total

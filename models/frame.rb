@@ -29,9 +29,18 @@ class Frame
   end
 
   def first_throw
+    return get_value(box_1) if final_frame?
     return 10 if strike?
 
     box_1.to_i
+  end
+
+  def second_throw
+    if box_2 == '/'
+      10 - box_1.to_i
+    else
+      get_value(box_2)
+    end
   end
 
   def inner_total

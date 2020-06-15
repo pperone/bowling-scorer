@@ -36,7 +36,7 @@ class FormatScoreboard
   end
 
   def pinfalls(pinfalls)
-    line = "Pinfalls  "
+    line = "Pinfalls   "
 
     pinfalls.each do |p|
       line += "#{p} "
