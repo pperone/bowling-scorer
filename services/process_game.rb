@@ -9,7 +9,7 @@ require './models/scoreboard.rb'
 require './services/format_scoreboard.rb'
 
 class ProcessGame
-  def initialize(file: file)
+  def initialize(file:)
     @file = file
   end
 

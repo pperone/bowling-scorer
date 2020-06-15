@@ -6,7 +6,7 @@ require './models/player.rb'
 require './models/scoreboard.rb'
 
 class FormatScoreboard
-  def initialize(game: game)
+  def initialize(game:)
     @game = game
   end
 
@@ -28,26 +28,30 @@ class FormatScoreboard
   attr_reader :game
 
   def header
-    'Frame    1   2   3   4   5   6   7   8   9   10'
+    "Frame\t  1\t2\t3\t4\t5\t6\t7\t8\t9\t10"
   end
 
   def player(name)
-    "#{name}\n"
+    "#{name}"
   end
 
   def pinfalls(pinfalls)
-    line = 'Pinfalls  '
+    line = "Pinfalls  "
 
     pinfalls.each do |p|
       line += "#{p} "
     end
+
+    line
   end
 
   def score(scores)
-    line = 'Score    '
+    line = "Score\t  "
 
     scores.each do |s|
-      line += "#{s}   "
+      line += "#{s}\t"
     end
+
+    line
   end
 end

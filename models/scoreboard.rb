@@ -22,6 +22,7 @@ class Scoreboard
       else
         pinfalls << f.box_1
         pinfalls << f.box_2
+        pinfalls << '   '
       end
     end
 
@@ -75,8 +76,12 @@ class Scoreboard
       if s == 'F'
         no_blanks << s
       elsif s.to_i == 10
-        no_blanks << 0
-        no_blanks << 'X'
+        if no_blanks.length < 18
+          no_blanks << 0
+          no_blanks << 'X'
+        else
+          no_blanks << 'X'
+        end
       else
         no_blanks << s.to_i
       end
@@ -90,7 +95,7 @@ class Scoreboard
   end
 
   def calculate_totals(frames)
-    total = frames[0].inner_total
+    total = 0
     index = 0
 
     while index < frames.length
