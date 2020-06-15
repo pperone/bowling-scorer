@@ -1,10 +1,12 @@
-require 'rspec/autorun'
+require 'minitest/autorun'
 require_relative '../models/player.rb'
 
-describe Player do
-  it "return name" do
-    player = Player.new('Joe')
+class TestPlayer < Minitest::Test
+  def setup
+    @player = Player.new('Joe')
+  end
 
-    expect(player.name.to_eq('Joe')
+  def test_returns_name
+    assert_equal 'Joe', @player.name
   end
 end

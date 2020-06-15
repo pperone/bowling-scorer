@@ -4,6 +4,7 @@ require 'readline'
 # Services
 require './services/process_game.rb'
 
+# Interaction
 puts 'Enter file path:'
 
 input  = Readline.readline('> ', true)

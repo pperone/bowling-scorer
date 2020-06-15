@@ -38,6 +38,8 @@ class Frame
   def second_throw
     if box_2 == '/'
       10 - box_1.to_i
+    elsif strike?
+      0
     else
       get_value(box_2)
     end
