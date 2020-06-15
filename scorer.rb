@@ -7,8 +7,8 @@ require './services/process_game.rb'
 puts 'Enter file path:'
 
 input  = Readline.readline('> ', true)
-file   = File.read(input).split('\n')
+file   = File.readlines(input)
 result = ProcessGame.new(file: file).call
 
-puts result
+result.each { |line| puts line }
 exit!
